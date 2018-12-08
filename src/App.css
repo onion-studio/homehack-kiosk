@@ -2,6 +2,23 @@
   text-align: center;
   /* background-color: black;
   color: white; */
+  font-family: 'Noto Sans KR', sans-serif;
+
+  display: flex;
+}
+
+.App-clock {
+  font-size: 100px;
+  line-height: 1;
+  margin: 0;
+}
+
+.App-info {
+  width: 280px;
+}
+
+.App-wall {
+  flex: 1;
 }
 
 .App p {
