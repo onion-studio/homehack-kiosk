@@ -15,7 +15,7 @@ class App extends Component {
     });
   };
   updateSensor = async () => {
-    const res = await fetch("//localhost:3030");
+    const res = await fetch("//localhost:3333");
     const [temp, humid] = await res.json();
     this.setState({ temp, humid });
   };
@@ -50,7 +50,9 @@ class App extends Component {
           <div>
             {year}년 {month}월 {date}일 {day}요일
           </div>
-          <div>{temp.toFixed(1)}℃ / {humid.toFixed(1)}%</div>
+          <div>
+            {temp.toFixed(1)}℃ / {humid.toFixed(1)}%
+          </div>
           <div>TODO: 날씨, 작업</div>
         </div>
       </div>
