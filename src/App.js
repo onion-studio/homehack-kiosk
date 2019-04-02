@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 const dayStrings = ["일", "월", "화", "수", "목", "금", "토"];
@@ -34,7 +33,10 @@ class App extends Component {
     const year = time.getFullYear();
     const month = time.getMonth() + 1;
     const date = time.getDate();
-    const hour = (time.getHours() % 12).toString().padStart(2, "0");
+    const hour = time
+      .getHours()
+      .toString()
+      .padStart(2, "0");
     const minute = time
       .getMinutes()
       .toString()

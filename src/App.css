@@ -2,7 +2,7 @@
   text-align: center;
   /* background-color: black;
   color: white; */
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 
   display: flex;
   height: 100vh;
@@ -22,7 +22,7 @@
 
 .App-wall {
   flex: 1;
-  background-image: url('https://lh3.googleusercontent.com/OWUpnretTxuLjLojHxsUyKGpjhZc6y0YjyqqFB1_ZhWP5RkwLB4f45lkbVPBh2EvoswFa2G3UbYRfLP-x3duPvP6TYWZySknecNvi9QTlZKOgNrMZ5e7jqJViBhmfBsYD7g_T34BESSIxUQvscdembN4DWxxjx29sAMhq5fN3h3NJ4s78rTUFfdGw-pQZe_m7rew5-Lg5kYBHdmFYyd78Dq8r1dmAPETfFeoqNHbQ_zjpMpnSiTx1hysHFIC4EhxtJ6UlyGEuyDwjHvTt8VV91jx5y9ZMl4vCb6-7EuZmmqSp6nlrRtiAbshU2wQixlClJOYmVlOUdfMKiCCiC3BclyLy9TIqQSnZkbQCwvEI2IeE0IPXd17vbINTPoudA8TyqmfNRq1J2MJNjhvR93x4NuzOmuIgYvaLXRyQgTz0PoPCfmKoApEKbvnlFivYWK1MXeDyLHWbzndZPonzrEEpzxHxjtZEjYlvHCSkXxig8wBbh1TQM9HfzzIA4ARvSF8YDgOLD9ZrKoZfwlZpv4WgFHvNjnVRhu4kJuYlGS472FLdAtlB1mIk17IJzvT023mDNLLdImG2ZJifXIJvXX8ob1a4FpQosDW-W__Z8HN34jh2zRXAVGQ6DSAAe65EVG6GKJTEEwyMhIsbj91VHtIdvCtjw=w1504-h2006-no');
+  background-image: url("https://cdn.glitch.com/7d47d136-581c-4711-9ae9-406741fa705c%2Fus-autumn.jpg?1554176147546");
   background-size: cover;
 }
 
