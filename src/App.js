@@ -29,40 +29,20 @@ class App extends Component {
   updateWeatherForecast = async () => {
     const res = await fetch("http://192.168.21.4:3030/weather");
     const { POP, SKY, TMN, TMX } = await res.json();
-    const precipitationForToday = POP.reduce((acc, obj, index) => {
-      if (index <= 5) {
+    const reducer = (end, start = -1) => (acc, obj, index) => {
+      if (index > start && index <= end) {
         if (acc < obj.fcstValue) {
           acc = obj.fcstValue;
         }
       }
       return acc;
-    }, 0);
-    const skyForToday = SKY.reduce((acc, obj, index) => {
-      if (index <= 5) {
-        if (acc < obj.fcstValue) {
-          acc = obj.fcstValue;
-        }
-      }
-      return acc;
-    }, 0);
+    };
+    const precipitationForToday = POP.reduce(reducer(5), 0);
+    const skyForToday = SKY.reduce(reducer(5), 0);
     const highestTempForToday = TMX[0].fcstValue;
     const lowestTempForToday = TMN[0].fcstValue;
-    const precipitationForTomorrow = POP.reduce((acc, obj, index) => {
-      if (index > 5 && index <= 13) {
-        if (acc < obj.fcstValue) {
-          acc = obj.fcstValue;
-        }
-      }
-      return acc;
-    }, 0);
-    const skyForTomorrow = SKY.reduce((acc, obj, index) => {
-      if (index > 5 && index <= 13) {
-        if (acc < obj.fcstValue) {
-          acc = obj.fcstValue;
-        }
-      }
-      return acc;
-    }, 0);
+    const precipitationForTomorrow = POP.reduce(reducer(13, 5), 0);
+    const skyForTomorrow = SKY.reduce(reducer(13, 5), 0);
     const highestTempForTomorrow = TMX[1].fcstValue;
     const lowestTempForTomorrow = TMN[1].fcstValue;
 
@@ -83,10 +63,12 @@ class App extends Component {
     this.updateWeatherForecast();
     this.timerId = setInterval(this.updateTime, 1000);
     this.sensorUpdaterId = setInterval(this.updateSensor, 10000);
+    this.weatherUpdaterId = setInterval(this.updateWeatherForecast, 3600000);
   }
   componentWillUnmount() {
     clearInterval(this.timerId);
     clearInterval(this.sensorUpdaterId);
+    clearInterval(this.weatherUpdaterId);
   }
   getSky(code) {
     return code === 1
