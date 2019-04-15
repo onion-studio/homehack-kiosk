@@ -7,9 +7,14 @@ class App extends Component {
     time: new Date(),
     temp: 0,
     humid: 0,
-    highestTempForecast: 0,
-    lowestTempForecast: 0,
-    rainPercentForecast: 0
+    precipitationForToday: 0,
+    skyForToday: "",
+    highestTempForToday: 0,
+    lowestTempForToday: 0,
+    precipitationForTomorrow: 0,
+    skyForTomorrow: "",
+    highestTempForTomorrow: 0,
+    lowestTempForTomorrow: 0
   };
   updateTime = () => {
     this.setState({
@@ -21,23 +26,61 @@ class App extends Component {
     const [temp, humid] = await res.json();
     this.setState({ temp, humid });
   };
-  // FIXME: CORS 이슈 => 서버 쪽에서 해결 후 다시 보는 것으로.
-  // updateWeatherForecast = async () => {
-  //   const date = "20190402";
-  //   const baseTime = "0500";
-  //   const serviceKey =
-  //     "M1H2H0qNrZAPKGCU1Jpba5Pwfnf%2FI23wWwqDCvaKxoO3TmuN2lul8NG1NF7DmC1LxByhjgb8RrcZDhS7r6mVwA%3D%3D";
-  //   const locationX = "59";
-  //   const locationY = "125";
-  //   const numOfRows = "10";
-  //   const url = `http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?serviceKey=${serviceKey}&base_date=${date}&base_time=${baseTime}&nx=${locationX}&ny=${locationY}&numOfRows=${numOfRows}&_type=json`;
-  //   const res = await fetch(url, { cors: true });
-  //   console.log(res.body.item);
-  // };
+  updateWeatherForecast = async () => {
+    const res = await fetch("http://192.168.21.4:3030/weather");
+    const { POP, SKY, TMN, TMX } = await res.json();
+    const precipitationForToday = POP.reduce((acc, obj, index) => {
+      if (index <= 5) {
+        if (acc < obj.fcstValue) {
+          acc = obj.fcstValue;
+        }
+      }
+      return acc;
+    }, 0);
+    const skyForToday = SKY.reduce((acc, obj, index) => {
+      if (index <= 5) {
+        if (acc < obj.fcstValue) {
+          acc = obj.fcstValue;
+        }
+      }
+      return acc;
+    }, 0);
+    const highestTempForToday = TMX[0].fcstValue;
+    const lowestTempForToday = TMN[0].fcstValue;
+    const precipitationForTomorrow = POP.reduce((acc, obj, index) => {
+      if (index > 5 && index <= 13) {
+        if (acc < obj.fcstValue) {
+          acc = obj.fcstValue;
+        }
+      }
+      return acc;
+    }, 0);
+    const skyForTomorrow = SKY.reduce((acc, obj, index) => {
+      if (index > 5 && index <= 13) {
+        if (acc < obj.fcstValue) {
+          acc = obj.fcstValue;
+        }
+      }
+      return acc;
+    }, 0);
+    const highestTempForTomorrow = TMX[1].fcstValue;
+    const lowestTempForTomorrow = TMN[1].fcstValue;
+
+    this.setState({
+      precipitationForToday,
+      skyForToday,
+      highestTempForToday,
+      lowestTempForToday,
+      precipitationForTomorrow,
+      skyForTomorrow,
+      highestTempForTomorrow,
+      lowestTempForTomorrow
+    });
+  };
   componentDidMount() {
     this.updateTime();
     this.updateSensor();
-    // this.updateWeatherForecast();
+    this.updateWeatherForecast();
     this.timerId = setInterval(this.updateTime, 1000);
     this.sensorUpdaterId = setInterval(this.updateSensor, 10000);
   }
@@ -45,8 +88,29 @@ class App extends Component {
     clearInterval(this.timerId);
     clearInterval(this.sensorUpdaterId);
   }
+  getSky(code) {
+    return code === 1
+      ? "맑음"
+      : code === 2
+      ? "구름 조금"
+      : code === 3
+      ? "구름 많음"
+      : "흐림";
+  }
   render() {
-    const { time, temp, humid } = this.state;
+    const {
+      time,
+      temp,
+      humid,
+      precipitationForToday,
+      skyForToday,
+      highestTempForToday,
+      lowestTempForToday,
+      precipitationForTomorrow,
+      skyForTomorrow,
+      highestTempForTomorrow,
+      lowestTempForTomorrow
+    } = this.state;
     const year = time.getFullYear();
     const month = time.getMonth() + 1;
     const date = time.getDate();
@@ -72,10 +136,23 @@ class App extends Component {
           <div>
             {temp.toFixed(1)}℃ / {humid.toFixed(1)}%
           </div>
-          <div>
-            <div>오늘의 최저 기온: {}</div>
-            <div>오늘의 최고 기온: {}</div>
-            <div>강수 확률: {}</div>
+          <div className="App-weather">
+            <div>
+              <div>오늘</div>
+              <div>{this.getSky(skyForToday)}</div>
+              <div>
+                {lowestTempForToday}℃ / {highestTempForToday}℃
+              </div>
+              <div>강수확률: {precipitationForToday}%</div>
+            </div>
+            <div>
+              <div>내일</div>
+              <div>{this.getSky(skyForTomorrow)}</div>
+              <div>
+                {lowestTempForTomorrow}℃ / {highestTempForTomorrow}℃
+              </div>
+              <div>강수확률: {precipitationForTomorrow}%</div>
+            </div>
           </div>
         </div>
       </div>
