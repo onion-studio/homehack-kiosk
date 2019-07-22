@@ -59,8 +59,8 @@ class App extends Component {
     });
   };
   updateDustForecast = async () => {
-    const res = await fetch("http://192.168.21.4:3030/weather");
-    const { dust } = await res.json();
+    const res = await fetch("http://192.168.21.4:3030/weather/dust");
+    const dust = await res.json();
     this.setState({
       dust
     })
