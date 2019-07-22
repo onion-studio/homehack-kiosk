@@ -14,7 +14,8 @@ class App extends Component {
     precipitationForTomorrow: 0,
     skyForTomorrow: "",
     highestTempForTomorrow: 0,
-    lowestTempForTomorrow: 0
+    lowestTempForTomorrow: 0,
+    dust: 0
   };
   updateTime = () => {
     this.setState({
@@ -57,6 +58,13 @@ class App extends Component {
       lowestTempForTomorrow
     });
   };
+  updateDustForecast = async () => {
+    const res = await fetch("http://192.168.21.4:3030/weather/dust");
+    const dust = await res.json();
+    this.setState({
+      dust
+    })
+  }
   componentDidMount() {
     this.updateTime();
     this.updateSensor();
@@ -64,11 +72,13 @@ class App extends Component {
     this.timerId = setInterval(this.updateTime, 1000);
     this.sensorUpdaterId = setInterval(this.updateSensor, 10000);
     this.weatherUpdaterId = setInterval(this.updateWeatherForecast, 3600000);
+    this.dustUpdaterId = setInterval(this.updateDustForecast, 1800000)
   }
   componentWillUnmount() {
     clearInterval(this.timerId);
     clearInterval(this.sensorUpdaterId);
     clearInterval(this.weatherUpdaterId);
+    clearInterval(this.dustUpdaterId);
   }
   getSky(code) {
     return code === 1
@@ -91,7 +101,8 @@ class App extends Component {
       precipitationForTomorrow,
       skyForTomorrow,
       highestTempForTomorrow,
-      lowestTempForTomorrow
+      lowestTempForTomorrow,
+      dust
     } = this.state;
     const year = time.getFullYear();
     const month = time.getMonth() + 1;
@@ -126,6 +137,7 @@ class App extends Component {
                 {lowestTempForToday}℃ / {highestTempForToday}℃
               </div>
               <div>강수확률: {precipitationForToday}%</div>
+              <div>현재 봉천동 미세먼지: {dust}㎍/㎥</div>
             </div>
             <div>
               <div>내일</div>
