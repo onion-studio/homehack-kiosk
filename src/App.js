@@ -15,7 +15,8 @@ class App extends Component {
     skyForTomorrow: "",
     highestTempForTomorrow: 0,
     lowestTempForTomorrow: 0,
-    dust: 0
+    dust: 0,
+    fineDust: 0
   };
   updateTime = () => {
     this.setState({
@@ -60,15 +61,17 @@ class App extends Component {
   };
   updateDustForecast = async () => {
     const res = await fetch("http://192.168.21.4:3030/weather/dust");
-    const dust = await res.json();
+    const { dust, fineDust } = await res.json();
     this.setState({
-      dust
+      dust: parseInt(dust),
+      fineDust: parseInt(fineDust)
     })
   }
   componentDidMount() {
     this.updateTime();
     this.updateSensor();
     this.updateWeatherForecast();
+    this.updateDustForecast();
     this.timerId = setInterval(this.updateTime, 1000);
     this.sensorUpdaterId = setInterval(this.updateSensor, 10000);
     this.weatherUpdaterId = setInterval(this.updateWeatherForecast, 3600000);
@@ -89,6 +92,42 @@ class App extends Component {
       ? "구름 많음"
       : "흐림";
   }
+  getFineDust(state) {
+    return state >= 75
+      ? "매우 나쁨"
+      : state >= 35
+      ? "나쁨"
+      : state >= 15
+      ? "보통"
+      : "좋음"
+  }
+  getClassForFineDust(state) {
+    return state >= 75
+      ? "lv4"
+      : state >= 35
+      ? "lv3"
+      : state >= 15
+      ? "lv2"
+      : "lv1"
+  }
+  getDust(state) {
+    return state >= 150
+      ? "매우 나쁨"
+      : state >= 80
+      ? "나쁨"
+      : state >= 30
+      ? "보통"
+      : "좋음"
+  }
+  getClassForDust(state) {
+    return state >= 150
+      ? "lv4"
+      : state >= 80
+      ? "lv3"
+      : state >= 30
+      ? "lv2"
+      : "lv1"
+  }
   render() {
     const {
       time,
@@ -102,7 +141,8 @@ class App extends Component {
       skyForTomorrow,
       highestTempForTomorrow,
       lowestTempForTomorrow,
-      dust
+      dust,
+      fineDust
     } = this.state;
     const year = time.getFullYear();
     const month = time.getMonth() + 1;
@@ -123,30 +163,33 @@ class App extends Component {
           <div className="App-clock">
             {hour}:{minute}
           </div>
-          <div>
+          <h1>
             {year}년 {month}월 {date}일 {day}요일
-          </div>
-          <div>
+          </h1>
+          <p className="current">
             {temp.toFixed(1)}℃ / {humid.toFixed(1)}%
-          </div>
+          </p>
           <div className="App-weather">
-            <div>
-              <div>오늘</div>
-              <div>{this.getSky(skyForToday)}</div>
-              <div>
+            <section>
+              <h2>오늘</h2>
+              <p>{this.getSky(skyForToday)}</p>
+              <p>
                 {lowestTempForToday}℃ / {highestTempForToday}℃
-              </div>
-              <div>강수확률: {precipitationForToday}%</div>
-              <div>현재 봉천동 미세먼지: {dust}㎍/㎥</div>
-            </div>
-            <div>
-              <div>내일</div>
-              <div>{this.getSky(skyForTomorrow)}</div>
-              <div>
+              </p>
+              <p>강수확률: {precipitationForToday}%</p>
+            </section>
+            <section>
+              <h2>내일</h2>
+              <p>{this.getSky(skyForTomorrow)}</p>
+              <p>
                 {lowestTempForTomorrow}℃ / {highestTempForTomorrow}℃
-              </div>
-              <div>강수확률: {precipitationForTomorrow}%</div>
-            </div>
+              </p>
+              <p>강수확률: {precipitationForTomorrow}%</p>
+            </section>
+          </div>
+          <div className="App-dust">
+            <p>미세먼지: <span className={this.getClassForDust(dust)}>{this.getDust(dust)}</span> {dust}㎍/㎥</p>
+            <p>초미세먼지: <span className={this.getClassForFineDust(fineDust)}>{this.getFineDust(fineDust)}</span> {fineDust}㎍/㎥</p>
           </div>
         </div>
       </div>

@@ -26,7 +26,7 @@
   background-size: cover;
 }
 
-.App p {
+.App .current {
   font-size: 20px;
 }
 
@@ -44,4 +44,28 @@
   margin-top: 2rem;
   display: flex;
   justify-content: space-around;
+}
+.App-dust{
+  margin-top: 20px;
+}
+
+h1, h2{
+  font-size: 16px;
+  font-weight: normal;
+}
+p{
+  margin: 0;
+  line-height: 2em;
+}
+.lv1{
+  color: #32a1ff;
+}
+.lv2{
+  color: #00c73c;
+}
+.lv3{
+  color: #fd9b5a;
+}
+.lv4{
+  color: #ff5959;
 }
