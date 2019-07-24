@@ -15,7 +15,7 @@
 }
 
 .App-clock {
-  font-size: 90px;
+  font-size: 85px;
   line-height: 1;
   margin: 0;
 }
@@ -41,7 +41,7 @@
   color: white;
 }
 .App-weather {
-  margin-top: 2rem;
+  margin-top: 1rem;
   display: flex;
   justify-content: space-around;
 }
@@ -50,12 +50,13 @@
 }
 
 h1, h2{
-  font-size: 16px;
+  font-size: 22px;
   font-weight: normal;
 }
 p{
+  font-size: 20px;
   margin: 0;
-  line-height: 2em;
+  line-height: 1.5em;
 }
 .lv1{
   color: #32a1ff;
